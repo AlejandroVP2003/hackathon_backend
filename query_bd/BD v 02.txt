@@ -1,0 +1,71 @@
+-- Crear la base de datos
+CREATE DATABASE PruebaBD;
+
+-- Seleccionar la base de datos
+USE PruebaBD;
+
+-- Crear tabla Usuarios
+CREATE TABLE Usuarios (
+    usuario_id INT PRIMARY KEY,
+	dni VARCHAR (8) UNIQUE NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+	apellido_paterno VARCHAR(100) NOT NULL,
+	apellido_materno VARCHAR(100) NOT NULL,
+	fecha_nacimiento DATE NOT NULL,
+	telefono VARCHAR(9) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+	tipo INT NOT NULL,
+    password VARCHAR(100) NOT NULL
+);
+
+-- Crear tabla Grupos
+CREATE TABLE Grupos (
+    grupo_id INT PRIMARY KEY ,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    usuario_id INT,
+    codigo_grupo VARCHAR(10) NOT NUll,
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(usuario_id)
+);
+
+-- Crear tabla UsuariosGrupos (relación muchos a muchos entre Usuarios y Grupos)
+CREATE TABLE UsuariosGrupos (
+    usuario_id INT,
+    grupo_id INT,
+    PRIMARY KEY (usuario_id, grupo_id),
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(usuario_id),
+    FOREIGN KEY (grupo_id) REFERENCES Grupos(grupo_id)
+);
+
+-- Crear tabla Eventos
+CREATE TABLE Eventos (
+    evento_id INT PRIMARY KEY ,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    fecha_inicio DATETIME NOT NULL,
+    fecha_fin DATETIME,
+    tipo INT NOT NULL,
+    ubicacion_latitud DECIMAL(10, 8),
+    ubicacion_longitud DECIMAL(11, 8),
+    llave VARCHAR(255) NOT NULL
+);
+
+-- Crear tabla UsuariosEventos (relación muchos a muchos entre Usuarios y Eventos)
+CREATE TABLE UsuariosEventos (
+    usuario_id INT,
+    evento_id INT,
+    PRIMARY KEY (usuario_id, evento_id),
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(usuario_id),
+    FOREIGN KEY (evento_id) REFERENCES Eventos(evento_id)
+);
+
+-- Crear tabla Comentarios
+CREATE TABLE Comentarios (
+    comentario_id INT PRIMARY KEY,
+    contenido TEXT NOT NULL,
+    usuario_id INT,
+    evento_id INT,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(usuario_id),
+    FOREIGN KEY (evento_id) REFERENCES Eventos(evento_id)
+);
